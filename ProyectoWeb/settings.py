@@ -45,8 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'carro',
     'autenticacion',
-    'crispy_forms',
-    'crispy_bootstrap5',
+  
 ]
 
 MIDDLEWARE = [
