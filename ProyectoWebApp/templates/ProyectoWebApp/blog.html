@@ -1,0 +1,197 @@
+{% extends 'ProyectoWebApp/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+.container {
+  width: 90%;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #0d6efd;
+}
+
+
+.botones {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.botones button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  background: #ddd;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.botones button:hover {
+  background: #bbb;
+}
+
+.lista{
+  color: white;
+}
+.lista .item {
+  border-bottom: 1px solid ;
+  padding: 15px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  color: black;
+}
+
+.card {
+  width: 30%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 2px 2px 10px rgb(255, 255, 255);
+}
+
+.card img {
+  width: 100%;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+
+.carrusel {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.slide {
+  display: none;
+}
+
+.slide.active {
+  display: block;
+}
+
+.carrusel img {
+  max-width: 400px;
+  margin-top: 10px;
+}
+
+.controles {
+  margin-top: 10px;
+  color: white;
+}
+
+.controles button {
+  padding: 8px 12px;
+  margin: 5px;
+}
+
+
+.oculto {
+  display: none;
+}
+</style>
+
+<h1 style="color: white;">Blog</h1>
+
+<div class="container">
+
+
+  <div class="botones">
+    <button onclick="mostrar('lista')">Lista</button>
+    <button onclick="mostrar('cards')">Cards</button>
+    <button onclick="mostrar('carrusel')">Carrusel</button>
+  </div>
+
+
+  <div id="lista" class="lista">
+    {% for post in Posts %}
+      <div class="item">
+        <h3>{{ post.titulo }}</h3>
+        <p>{{ post.contenido|truncatewords:30 }}</p>
+
+        {% if post.imagen %}
+          <img src="{{ post.imagen.url }}" width="200">
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  
+  <div id="cards" class="cards oculto">
+    {% for post in Posts %}
+      <div class="card">
+        {% if post.imagen %}
+          <img src="{{ post.imagen.url }}">
+        {% endif %}
+        <div class="card-body">
+          <h4>{{ post.titulo }}</h4>
+          <p>{{ post.contenido|truncatewords:20 }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+ 
+  <div id="carrusel" class="carrusel oculto">
+
+    {% for post in Posts %}
+      <div class="slide {% if forloop.first %}active{% endif %}">
+        <h3>{{ post.titulo }}</h3>
+        <p>{{ post.contenido|truncatewords:30 }}</p>
+
+        {% if post.imagen %}
+          <img src="{{ post.imagen.url }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="controles">
+      <button onclick="prev()">Anterior</button>
+      <button onclick="next()">Siguiente</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function mostrar(vista) {
+  document.getElementById('lista').classList.add('oculto');
+  document.getElementById('cards').classList.add('oculto');
+  document.getElementById('carrusel').classList.add('oculto');
+
+  document.getElementById(vista).classList.remove('oculto');
+}
+
+
+let index = 0;
+const slides = document.getElementsByClassName("slide");
+
+function mostrarSlide(i) {
+  for (let s of slides) {
+    s.classList.remove("active");
+  }
+  slides[i].classList.add("active");
+}
+
+function next() {
+  index = (index + 1) % slides.length;
+  mostrarSlide(index);
+}
+
+function prev() {
+  index = (index - 1 + slides.length) % slides.length;
+  mostrarSlide(index);
+}
+</script>
+
+{% endblock %}
